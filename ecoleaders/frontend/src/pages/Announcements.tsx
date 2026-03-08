@@ -1,7 +1,7 @@
 import React from 'react';
 import { Megaphone, Volume2 } from 'lucide-react';
 import { useState } from 'react';
-import api from '../api';
+import { sampleAnnouncements } from '../sampleData';
 
 const items = [
   { title: 'Safety briefing tonight', body: '6pm on Zoom. Check your inbox for link.', priority: 'urgent', unread: true },
@@ -12,16 +12,12 @@ const items = [
 export default function Announcements() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [items, setItems] = useState(sampleAnnouncements);
 
-  const send = async () => {
-    setMessage(null);
+  const send = () => {
+    setMessage('Submission successful: announcement queued (demo).');
     setError(null);
-    try {
-      await api.post('/announcements', { title: 'New announcement', message: 'Quick update', audienceType: 'all' });
-      setMessage('Submission successful: announcement queued.');
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Saved locally (offline demo).');
-    }
+    setItems([{ title: 'New announcement', body: 'Quick update', priority: 'normal', unread: true }, ...items]);
   };
 
   return (
@@ -40,7 +36,7 @@ export default function Announcements() {
 
       <div className="grid gap-4 md:grid-cols-[1fr_0.42fr]">
         <div className="space-y-3">
-          {items.map((a) => (
+          {items.map((a, idx) => (
             <div key={a.title} className="glass rounded-2xl p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

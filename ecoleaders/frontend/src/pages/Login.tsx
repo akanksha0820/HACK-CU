@@ -13,16 +13,10 @@ export default function Login() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus(null);
+    setStatus('Sign-in successful (demo mode).');
     setError(null);
-    try {
-      await login(email, password);
-      setStatus('Sign-in successful.');
-      const redirectTo = (location.state as any)?.from || '/dashboard';
-      navigate(redirectTo);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Login failed. Please try again.');
-    }
+    const redirectTo = (location.state as any)?.from || '/dashboard';
+    navigate(redirectTo);
   };
 
   return (
@@ -62,10 +56,7 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-4 text-sm text-[color:var(--muted)]">
-          No account?{' '}
-          <NavLink to="/register" className="text-gold">
-            Create one
-          </NavLink>
+          No account needed in demo mode. Use any email/password.
         </p>
         <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] p-4 text-sm">
           <p className="font-semibold">Guest access</p>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import api from '../api';
 
 export default function AITools() {
   const [intake, setIntake] = useState<Record<string, string>>({
@@ -19,18 +18,10 @@ export default function AITools() {
     setLoading(true);
     setMessage(null);
     setError(null);
-    try {
-      const res = await api.post('/site/generate', {
-        nonprofitName: intake.name,
-        mission: intake.mission,
-      });
-      setHtml(res.data.templateHtml || '<h1>Gemini response placeholder</h1>');
-      setMessage('Submission successful: site generated.');
-    } catch (err) {
-      setError('Gemini generation requires API key or connectivity.');
-    } finally {
-      setLoading(false);
-    }
+    setHtml(`<h1>${intake.name}</h1><p>${intake.mission}</p><p>Programs: ${intake.programs}</p>`);
+    setMessage('Submission successful: site generated (demo).');
+    setError(null);
+    setLoading(false);
   };
 
   return (

@@ -15,53 +15,15 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(false);
+  // No auth: always an anonymous volunteer
+  const defaultUser: User = { id: 'anon', name: 'Guest Volunteer', email: 'guest@eco.com', role: 'volunteer' };
+  const [user] = useState<User | null>(defaultUser);
+  const [token] = useState<string | null>(null);
+  const [loading] = useState(false);
 
-  // Fetch profile on first load if token exists
-  useEffect(() => {
-    const fetchMe = async () => {
-      if (!token) return;
-      try {
-        const res = await api.get('/auth/me');
-        setUser(res.data.user);
-      } catch (err) {
-        logout();
-      }
-    };
-    fetchMe();
-  }, [token]);
-
-  const login = async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      setToken(res.data.token);
-      setUser(res.data.user);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const register = async (name: string, email: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await api.post('/auth/register', { name, email, password, role: 'volunteer' });
-      localStorage.setItem('token', res.data.token);
-      setToken(res.data.token);
-      setUser(res.data.user);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    setToken(null);
-  };
+  const login = async () => {};
+  const register = async () => {};
+  const logout = () => {};
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>

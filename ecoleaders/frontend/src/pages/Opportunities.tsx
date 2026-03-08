@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
-import api from '../api';
 import { sampleEvents } from '../sampleData';
 
 type Item = {
@@ -28,47 +27,25 @@ export default function Opportunities() {
   );
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await api.get<any[]>('/events');
-        const mapped: Item[] = res.data.map((ev) => ({
-          id: ev._id,
-          title: ev.title,
-          date: new Date(ev.date).toLocaleString(),
-          location: ev.location,
-          roles: ev.tags || [],
-          capacity: `${(ev.attendees || []).length}/${ev.capacity || 0}`,
-          coordinator: ev.coordinator || ev.createdBy?.name || 'Coordinator',
-          tags: ev.tags || [],
-          required: ev.requiredTrainings || [],
-          category: ev.category || 'volunteer',
-        }));
-        setItems(mapped);
-      } catch {
-        const mapped: Item[] = sampleEvents.map((ev) => ({
-          id: ev._id,
-          title: ev.title,
-          date: new Date(ev.date).toLocaleString(),
-          location: ev.location,
-          roles: ev.tags,
-          capacity: 'open',
-          coordinator: ev.coordinator,
-          tags: ev.tags,
-          required: ev.required || [],
-          category: ev.category,
-        }));
-        setItems(mapped);
-        setError('Using demo opportunities (API unreachable).');
-      }
-    };
-    load();
+    const mapped: Item[] = sampleEvents.map((ev) => ({
+      id: ev._id,
+      title: ev.title,
+      date: new Date(ev.date).toLocaleString(),
+      location: ev.location,
+      roles: ev.tags,
+      capacity: 'open',
+      coordinator: ev.coordinator,
+      tags: ev.tags,
+      required: ev.required || [],
+      category: ev.category,
+    }));
+    setItems(mapped);
   }, []);
 
   const handleSignup = async (id: string) => {
     setMessage(null);
     setError(null);
     try {
-      await api.post(`/events/${id}/signup`);
       setMessage('Submission successful: you are signed up for this opportunity.');
       setSigned(new Set(signed).add(id));
     } catch (err: any) {

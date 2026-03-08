@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import api from '../api';
 import { sampleEvents, sampleCarpools, sampleRideRequests } from '../sampleData';
 
 interface Event {
@@ -27,10 +26,7 @@ export default function Carpool() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api
-      .get<Event[]>('/events')
-      .then((res) => setEvents(res.data))
-      .catch(() => setEvents(sampleEvents));
+    setEvents(sampleEvents);
   }, []);
 
   useEffect(() => {
@@ -44,49 +40,34 @@ export default function Carpool() {
     setSelectedEventId(eventId);
     setMessage(null);
     setError(null);
-    try {
-      const res = await api.get<Carpool[]>(`/carpool/event/${eventId}`);
-      setCarpools(res.data);
-    } catch (err) {
-      setCarpools(sampleCarpools);
-    }
+    setCarpools(sampleCarpools);
   };
 
   const handleCreate = async () => {
     setMessage(null);
     setError(null);
-    try {
-      await api.post('/carpool', { ...form, eventId: selectedEventId });
-      setMessage('Submission successful: carpool created.');
-      setForm({ seatsAvailable: 3, meetingPoint: '', departureTime: '' });
-      loadCarpools(selectedEventId);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Saved locally (offline demo).');
-      // fallback: mock-create locally
-      setCarpools((prev) => [
-        ...prev,
-        {
-          _id: Math.random().toString(),
-          driver: { _id: 'self', name: 'You' },
-          seatsAvailable: form.seatsAvailable,
-          riders: [],
-          meetingPoint: form.meetingPoint,
-          departureTime: form.departureTime || new Date().toISOString(),
-        },
-      ]);
-    }
+    setMessage('Submission successful: carpool created.');
+    setForm({ seatsAvailable: 3, meetingPoint: '', departureTime: '' });
+    setCarpools((prev) => [
+      ...prev,
+      {
+        _id: Math.random().toString(),
+        driver: { _id: 'self', name: 'You' },
+        seatsAvailable: form.seatsAvailable,
+        riders: [],
+        meetingPoint: form.meetingPoint,
+        departureTime: form.departureTime || new Date().toISOString(),
+      },
+    ]);
   };
 
   const handleJoin = async (carpoolId: string) => {
     setMessage(null);
     setError(null);
-    try {
-      await api.post(`/carpool/${carpoolId}/join`);
-      setMessage('Submission successful: joined carpool.');
-      loadCarpools(selectedEventId);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Joined (mocked demo).');
-    }
+    setMessage('Submission successful: joined carpool.');
+    setCarpools((prev) =>
+      prev.map((c) => (c._id === carpoolId ? { ...c, riders: [...c.riders, { _id: 'self', name: 'You' }] } : c)),
+    );
   };
 
   return (

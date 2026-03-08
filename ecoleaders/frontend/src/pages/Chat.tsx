@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
 import { sampleChatMessages } from '../sampleData';
 import api from '../api';
 
@@ -11,7 +10,6 @@ interface ChatMessage {
 }
 
 export default function Chat() {
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [channel, setChannel] = useState<string>('general');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
@@ -26,45 +24,11 @@ export default function Chat() {
   ];
 
   useEffect(() => {
-    try {
-      const newSocket = io((import.meta as any).env?.VITE_API_BASE_URL || '/', {
-        auth: {
-          token: localStorage.getItem('token'),
-        },
-      });
-      setSocket(newSocket);
-      newSocket.on('connect', () => {
-        newSocket.emit('join', channel);
-      });
-      newSocket.on('chat', (msg: ChatMessage) => {
-        setMessages((prev) => [...prev, msg]);
-      });
-      newSocket.on('announcement', (announcement) => {
-        alert(`${announcement.title}: ${announcement.message}`);
-      });
-      return () => {
-        newSocket.disconnect();
-      };
-    } catch (err) {
-      setMessages(sampleChatMessages);
-    }
-  }, [channel]);
-
-  // load history via API (fallback to sample) on channel change
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await api.get<ChatMessage[]>(`/chatrooms/${channel}/messages`);
-        setMessages(res.data);
-      } catch (err) {
-        setMessages(sampleChatMessages.filter((m) => m.channel === channel));
-      }
-    };
-    fetchHistory();
+    setMessages(sampleChatMessages.filter((m) => m.channel === channel));
   }, [channel]);
 
   const sendMessage = () => {
-    if (!socket || !messageInput.trim()) return;
+    if (!messageInput.trim()) return;
     const local: ChatMessage = {
       channel,
       content: messageInput,
@@ -72,21 +36,6 @@ export default function Chat() {
       createdAt: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, local]);
-    socket.emit(
-      'chat',
-      {
-        channel,
-        content: messageInput,
-        token: localStorage.getItem('token'),
-      },
-      (ack: any) => {
-        if (ack && ack.error) {
-          // roll back if server rejects
-          setMessages((prev) => prev.filter((m) => m !== local));
-          alert(ack.error);
-        }
-      },
-    );
     setMessageInput('');
   };
 
