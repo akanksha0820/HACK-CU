@@ -3,18 +3,33 @@ import Announcement from '../models/Announcement';
 import TrainingProgress from '../models/TrainingProgress';
 import Carpool from '../models/Carpool';
 import User from '../models/User';
+import { mockEvents, mockAnnouncements, mockTrainingProgress, mockCarpools, mockUsers } from '../mockData';
+
+const useMock = process.env.SKIP_DB === 'true';
 
 export async function getDashboardMetrics() {
-  const [events, announcements, trainings, carpools, users] = await Promise.all([
-    Event.countDocuments(),
-    Announcement.countDocuments(),
-    TrainingProgress.countDocuments({ status: 'completed' }),
-    Carpool.countDocuments(),
-    User.countDocuments(),
-  ]);
-  return {
-    totals: { events, announcements, trainingsCompleted: trainings, carpools, users },
-  };
+  if (useMock) {
+    return {
+      totals: {
+        events: mockEvents.length,
+        announcements: mockAnnouncements.length,
+        trainingsCompleted: mockTrainingProgress.filter((p) => p.status === 'completed').length,
+        carpools: mockCarpools.length,
+        users: mockUsers.length,
+      },
+    };
+  } else {
+    const [events, announcements, trainings, carpools, users] = await Promise.all([
+      Event.countDocuments(),
+      Announcement.countDocuments(),
+      TrainingProgress.countDocuments({ status: 'completed' }),
+      Carpool.countDocuments(),
+      User.countDocuments(),
+    ]);
+    return {
+      totals: { events, announcements, trainingsCompleted: trainings, carpools, users },
+    };
+  }
 }
 
 export async function getAnalyticsSnapshots() {

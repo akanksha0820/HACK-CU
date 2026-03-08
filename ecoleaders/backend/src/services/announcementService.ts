@@ -1,9 +1,16 @@
 import Announcement from '../models/Announcement';
 import { sendAnnouncement } from './notificationService';
+import { mockAnnouncements } from '../mockData';
+
+const useMock = process.env.SKIP_DB === 'true';
 
 export async function createAnnouncement(payload: any) {
+  if (useMock) {
+    const ann = { _id: new Date().getTime().toString(), createdAt: new Date(), ...payload };
+    mockAnnouncements.unshift(ann as any);
+    return ann;
+  }
   const announcement = await Announcement.create(payload);
-  // broadcast via sockets; failures should not block response
   sendAnnouncement({
     title: announcement.title,
     message: announcement.message,
@@ -16,5 +23,6 @@ export async function createAnnouncement(payload: any) {
 }
 
 export async function listAnnouncements(filter: any = {}) {
+  if (useMock) return mockAnnouncements;
   return Announcement.find(filter).sort({ createdAt: -1 });
 }
