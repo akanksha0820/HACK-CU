@@ -1,41 +1,68 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import api from '../api';
-import { useState } from 'react';
+import { sampleEvents } from '../sampleData';
 
-const items = [
-  {
-    id: 'evt1',
-    title: 'Community Compost Workshop',
-    date: 'Sat, 2:00 PM',
-    location: 'Boulder Civic Area',
-    roles: ['Educator', 'Greeter'],
-    capacity: '12/20',
-    coordinator: 'Casey',
-    tags: ['composting', 'education'],
-    required: [],
-  },
-  {
-    id: 'evt2',
-    title: 'Saturday Creek Cleanup',
-    date: 'Sun, 9:00 AM',
-    location: 'Boulder Creek',
-    roles: ['Crew lead', 'Safety'],
-    capacity: '35/80',
-    coordinator: 'Jordan',
-    tags: ['cleanup', 'safety'],
-    required: ['Event Safety Basics'],
-  },
-];
+type Item = {
+  id: string;
+  title: string;
+  date: string;
+  location: string;
+  roles?: string[];
+  capacity: string;
+  coordinator?: string;
+  tags: string[];
+  required: string[];
+  category?: string;
+};
 
 export default function Opportunities() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signed, setSigned] = useState<Set<string>>(new Set());
+  const [items, setItems] = useState<Item[]>([]);
+
   const filterChips = useMemo(
     () => ['composting', 'education', 'cleanup', 'advocacy', 'private'],
     [],
   );
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await api.get<any[]>('/events');
+        const mapped: Item[] = res.data.map((ev) => ({
+          id: ev._id,
+          title: ev.title,
+          date: new Date(ev.date).toLocaleString(),
+          location: ev.location,
+          roles: ev.tags || [],
+          capacity: `${(ev.attendees || []).length}/${ev.capacity || 0}`,
+          coordinator: ev.coordinator || ev.createdBy?.name || 'Coordinator',
+          tags: ev.tags || [],
+          required: ev.requiredTrainings || [],
+          category: ev.category || 'volunteer',
+        }));
+        setItems(mapped);
+      } catch {
+        const mapped: Item[] = sampleEvents.map((ev) => ({
+          id: ev._id,
+          title: ev.title,
+          date: new Date(ev.date).toLocaleString(),
+          location: ev.location,
+          roles: ev.tags,
+          capacity: 'open',
+          coordinator: ev.coordinator,
+          tags: ev.tags,
+          required: ev.required || [],
+          category: ev.category,
+        }));
+        setItems(mapped);
+        setError('Using demo opportunities (API unreachable).');
+      }
+    };
+    load();
+  }, []);
 
   const handleSignup = async (id: string) => {
     setMessage(null);
@@ -47,8 +74,7 @@ export default function Opportunities() {
     } catch (err: any) {
       const detail = err?.response?.data?.message;
       setError(detail || 'Signup failed (auth or server). If running demo/mock, this may be informational only.');
-      // optimistic add in demo so UI moves on
-      setSigned(new Set(signed).add(id));
+      setSigned(new Set(signed).add(id)); // optimistic for demo
     }
   };
 
@@ -80,7 +106,7 @@ export default function Opportunities() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {items.map((item) => (
-          <div key={item.title} className="glass space-y-2 rounded-2xl p-5">
+          <div key={item.id} className="glass space-y-2 rounded-2xl p-5">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-xl font-semibold">{item.title}</h3>
