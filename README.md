@@ -46,7 +46,13 @@ ecoleaders/
   backend/    Express + TS API (mock by default; Mongo optional)
   frontend/   React + Vite client
 scripts/dev.js   one-command runner for both servers
+.github/workflows/deploy.yml   builds + publishes frontend to gh-pages
 ```
+
+## Deployment (GitHub Pages)
+- Pages should point to branch `gh-pages`, folder `/`.
+- Workflow `Deploy Frontend to GitHub Pages` (on pushes to master) builds `ecoleaders/frontend`, copies `404.html` for SPA routing, and publishes `dist/` to `gh-pages`.
+- Vite base is set to `/HACK-CU/` for correct asset paths on Pages. If you fork/rename, set `BASE_PATH` env or update `vite.config.ts`.
 
 ## How we built it (process)
 1) Started from the skeleton, split public vs. authenticated shells, and added role-aware nav.
