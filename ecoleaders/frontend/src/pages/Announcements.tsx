@@ -34,65 +34,31 @@ export default function Announcements() {
         </div>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-[1fr_0.42fr]">
-        <div className="space-y-3">
-          {items.map((a, idx) => (
-            <div key={a.title} className="glass rounded-2xl p-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Megaphone size={16} className="text-gold" />
-                  <p className="text-sm font-semibold">{a.title}</p>
-                </div>
-                <span
-                  className={[
-                    'rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.24em]',
-                    a.priority === 'urgent'
-                      ? 'bg-[color:rgba(255,65,65,0.12)] text-[color:rgba(255,200,200,0.9)]'
-                      : 'border border-[color:var(--border)] text-[color:var(--muted)]',
-                  ].join(' ')}
-                >
-                  {a.priority}
-                </span>
+      <div className="space-y-3">
+        {items.map((a) => (
+          <div key={a.title} className="glass rounded-2xl p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Megaphone size={16} className="text-gold" />
+                <p className="text-sm font-semibold">{a.title}</p>
               </div>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">{a.body}</p>
-              <div className="mt-3 flex gap-2 text-xs">
-                <button className="rounded-full bg-[color:var(--green)] px-3 py-1 text-slate-900">Got it</button>
-                <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Can drive</button>
-                <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Need help</button>
-              </div>
-              <div className="mt-3 flex items-center gap-2 text-xs text-[color:var(--muted)]">
-                <Volume2 size={14} /> Play voice (ElevenLabs)
-              </div>
-            </div>
-          ))}
-        </div>
-        <aside className="glass rounded-2xl p-5">
-          <h3 className="text-lg font-semibold">Compose (staff view)</h3>
-          <p className="text-xs text-[color:var(--muted)]">Target event attendees, channels, or all volunteers. Gemini will summarize for push.</p>
-          <div className="mt-3 space-y-2 text-sm">
-            <input className="w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-3 py-2" placeholder="Title" />
-            <textarea className="w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-3 py-2" rows={3} placeholder="Message" />
-            <div className="flex gap-2 text-xs">
-              <button onClick={send} className="rounded-full bg-[color:var(--green)] px-3 py-1 text-slate-900">Send</button>
-              <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Generate audio</button>
-              <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Summarize</button>
-              <button
-                onClick={async () => {
-                  setMessage(null); setError(null);
-                  try {
-                    await api.post('/notifications/register', {});
-                    setMessage('Push notifications enabled (demo stub).');
-                  } catch (err: any) {
-                    setError('Push registration failed; check connectivity.');
-                  }
-                }}
-                className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]"
+              <span
+                className={[
+                  'rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.24em]',
+                  a.priority === 'urgent'
+                    ? 'bg-[color:rgba(255,65,65,0.12)] text-[color:rgba(255,200,200,0.9)]'
+                    : 'border border-[color:var(--border)] text-[color:var(--muted)]',
+                ].join(' ')}
               >
-                Enable push (demo)
-              </button>
+                {a.priority}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-[color:var(--muted)]">{a.body}</p>
+            <div className="mt-3 flex items-center gap-2 text-xs text-[color:var(--muted)]">
+              <Volume2 size={14} /> Play voice (demo)
             </div>
           </div>
-        </aside>
+        ))}
       </div>
     </div>
   );

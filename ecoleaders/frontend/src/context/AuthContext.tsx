@@ -15,15 +15,31 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // No auth: always an anonymous volunteer
-  const defaultUser: User = { id: 'anon', name: 'Guest Volunteer', email: 'guest@eco.com', role: 'volunteer' };
-  const [user] = useState<User | null>(defaultUser);
-  const [token] = useState<string | null>(null);
-  const [loading] = useState(false);
+  const demoUsers: Record<string, { password: string; user: User }> = {
+    'ava@eco.com': { password: 'password123', user: { id: 'u1', name: 'Ava Volunteer', email: 'ava@eco.com', role: 'volunteer' } },
+    'casey@eco.com': { password: 'password123', user: { id: 'u2', name: 'Casey Coordinator', email: 'casey@eco.com', role: 'coordinator' } },
+    'alex@eco.com': { password: 'password123', user: { id: 'u3', name: 'Alex Admin', email: 'alex@eco.com', role: 'admin' } },
+  };
 
-  const login = async () => {};
-  const register = async () => {};
-  const logout = () => {};
+  const defaultUser = demoUsers['ava@eco.com'].user;
+  const [user, setUser] = useState<User | null>(defaultUser);
+  const [token] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    const entry = demoUsers[email.toLowerCase()];
+    if (!entry || entry.password !== password) {
+      setLoading(false);
+      throw new Error('Invalid credentials. Demo users: ava@eco.com, casey@eco.com, alex@eco.com (password123).');
+    }
+    setUser(entry.user);
+    setLoading(false);
+  };
+  const register = async () => {
+    throw new Error('Registration disabled in demo');
+  };
+  const logout = () => setUser(defaultUser);
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>

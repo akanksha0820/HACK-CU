@@ -71,8 +71,11 @@ function renderSection(title: string, list: any[]) {
                 )}
               </div>
             </div>
-            <button className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900">
-              Notify me
+            <button
+              onClick={() => alert('Signup successful (demo).')}
+              className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900"
+            >
+              Sign up
             </button>
           </div>
           <div className="mt-3 text-xs text-[color:var(--muted)]">
