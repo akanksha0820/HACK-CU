@@ -80,6 +80,20 @@ export default function Announcements() {
               <button onClick={send} className="rounded-full bg-[color:var(--green)] px-3 py-1 text-slate-900">Send</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Generate audio</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Summarize</button>
+              <button
+                onClick={async () => {
+                  setMessage(null); setError(null);
+                  try {
+                    await api.post('/notifications/register', {});
+                    setMessage('Push notifications enabled (demo stub).');
+                  } catch (err: any) {
+                    setError('Push registration failed; check connectivity.');
+                  }
+                }}
+                className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]"
+              >
+                Enable push (demo)
+              </button>
             </div>
           </div>
         </aside>

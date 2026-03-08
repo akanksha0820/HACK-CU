@@ -67,6 +67,21 @@ export default function Login() {
             Create one
           </NavLink>
         </p>
+        <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] p-4 text-sm">
+          <p className="font-semibold">Quick guest access</p>
+          <p className="text-xs text-[color:var(--muted)]">Username: guest &nbsp;&nbsp; Password: guest</p>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail('guest');
+              setPassword('guest');
+              onSubmit(new Event('submit') as any);
+            }}
+            className="mt-3 rounded-full bg-[color:var(--green)] px-4 py-2 text-xs font-semibold text-slate-900 shadow-fern"
+          >
+            Sign in as guest
+          </button>
+        </div>
       </div>
     </div>
   );

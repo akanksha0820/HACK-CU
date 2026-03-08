@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import { sampleEvents, sampleCarpools } from '../sampleData';
+import { sampleEvents, sampleCarpools, sampleRideRequests } from '../sampleData';
 
 interface Event {
   _id: string;
@@ -174,6 +174,20 @@ export default function Carpool() {
                 No carpools created yet.
               </div>
             )}
+            <div className="space-y-3">
+              <h4 className="text-lg font-semibold">Ride requests</h4>
+              {sampleRideRequests
+                .filter((r) => !selectedEventId || r.event.toLowerCase().includes(''))
+                .map((r) => (
+                  <div key={r._id} className="rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3 text-sm">
+                    <p className="font-semibold">{r.event}</p>
+                    <p className="text-xs text-[color:var(--muted)]">
+                      {r.neighborhood} • {r.window} • Return: {r.returnNeeded ? 'Yes' : 'No'}
+                    </p>
+                    <p className="text-xs text-[color:var(--muted)]">Notes: {r.notes}</p>
+                  </div>
+                ))}
+            </div>
           </section>
 
           <section className="glass rounded-2xl p-6">

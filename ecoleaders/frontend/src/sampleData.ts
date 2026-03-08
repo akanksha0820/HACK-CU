@@ -9,6 +9,7 @@ export const sampleEvents = [
     attendees: [{ _id: 'u1', name: 'Ava Volunteer' }],
     tags: ['composting', 'education'],
     coordinator: 'Casey Coordinator',
+    category: 'volunteer',
   },
   {
     _id: 'evt2',
@@ -20,6 +21,32 @@ export const sampleEvents = [
     attendees: [{ _id: 'u2', name: 'Ben Volunteer' }],
     tags: ['cleanup', 'safety'],
     coordinator: 'Jordan Coordinator',
+    category: 'volunteer',
+    required: ['Event Safety Basics'],
+  },
+  {
+    _id: 'evt3',
+    title: 'Zero Waste Advocacy Night',
+    description: 'Prep talking points and meet legislators.',
+    date: new Date(Date.now() + 3 * 86400000).toISOString(),
+    location: 'Downtown Library',
+    capacity: 50,
+    attendees: [],
+    tags: ['advocacy'],
+    coordinator: 'Casey Coordinator',
+    category: 'advocacy',
+  },
+  {
+    _id: 'evt4',
+    title: 'Partner Private Briefing',
+    description: 'Invite-only strategy session.',
+    date: new Date(Date.now() + 4 * 86400000).toISOString(),
+    location: 'Eco-Cycle HQ',
+    capacity: 12,
+    attendees: [],
+    tags: ['private'],
+    coordinator: 'Alex Admin',
+    category: 'private',
   },
 ];
 
@@ -41,6 +68,25 @@ export const sampleCarpools = [
     meetingPoint: 'North Boulder Park',
     departureTime: new Date(Date.now() + 40 * 3600000).toISOString(),
     pickupZone: 'North Boulder',
+  },
+];
+
+export const sampleRideRequests = [
+  {
+    _id: 'rq1',
+    event: 'Saturday Creek Cleanup',
+    neighborhood: 'Gunbarrel',
+    window: 'Arrive 8:40-8:55 AM',
+    returnNeeded: true,
+    notes: 'Can meet at Safeway lot',
+  },
+  {
+    _id: 'rq2',
+    event: 'Zero Waste Advocacy Night',
+    neighborhood: 'CU Campus',
+    window: 'Arrive 5:30-5:45 PM',
+    returnNeeded: false,
+    notes: 'Bike + bus ok if no car',
   },
 ];
 

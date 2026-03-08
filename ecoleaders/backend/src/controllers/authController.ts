@@ -45,12 +45,30 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    const isGuest = (email === 'guest' || email === 'guest@eco.com') && password === 'guest';
+
     if (useMock) {
-      const user = mockUsers.find((u) => u.email === email && u.password === password);
-      if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+      let user = mockUsers.find((u) => u.email === 'guest@eco.com');
+      if (isGuest && !user) {
+        user = { _id: new Date().getTime().toString(), name: 'Guest', email: 'guest@eco.com', password: 'guest', role: 'volunteer', completedTrainings: [] } as any;
+        mockUsers.push(user);
+      }
+      const found = isGuest ? user : mockUsers.find((u) => u.email === email && u.password === password);
+      if (!found) return res.status(401).json({ message: 'Invalid credentials' });
+      const token = jwt.sign({ id: found._id, role: found.role }, jwtSecret, { expiresIn: '7d' });
+      return res.json({ token, user: { id: found._id, name: found.name, email: found.email, role: found.role } });
+    }
+
+    if (isGuest) {
+      let user = await User.findOne({ email: 'guest@eco.com' });
+      if (!user) {
+        const hashed = await bcrypt.hash('guest', 10);
+        user = await User.create({ name: 'Guest', email: 'guest@eco.com', password: hashed, role: 'volunteer' });
+      }
       const token = jwt.sign({ id: user._id, role: user.role }, jwtSecret, { expiresIn: '7d' });
       return res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
     }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });

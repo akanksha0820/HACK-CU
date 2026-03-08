@@ -13,4 +13,9 @@ router.get('/', authenticate, async (_req, res) => {
   res.json({ announcements });
 });
 
+// Demo push registration stub
+router.post('/register', authenticate, async (_req, res) => {
+  res.json({ success: true, message: 'Push registration stored (demo stub).' });
+});
+
 export default router;
