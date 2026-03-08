@@ -23,6 +23,8 @@ export const mockEvents = [
     createdBy: mockUsers[1]._id,
     requiredTrainings: [],
     tags: ['composting', 'education'],
+    estimatedVolunteerHours: 2,
+    attendanceMarked: false,
   },
   {
     _id: oid(),
@@ -35,6 +37,8 @@ export const mockEvents = [
     createdBy: mockUsers[2]._id,
     requiredTrainings: ['safety'],
     tags: ['cleanup', 'safety'],
+    estimatedVolunteerHours: 3,
+    attendanceMarked: false,
   },
 ];
 

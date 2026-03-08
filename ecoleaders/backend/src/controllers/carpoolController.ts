@@ -31,7 +31,17 @@ export const createCarpool = async (req: Request, res: Response) => {
     const driverId: string = req.userId;
     const { eventId, seatsAvailable, meetingPoint, departureTime } = req.body;
     if (useMock) {
-      const cp = { _id: new Date().getTime().toString(), eventId, driver: driverId, seatsAvailable, meetingPoint, departureTime, riders: [] as string[] };
+      const cp = {
+        _id: new Date().getTime().toString(),
+        eventId,
+        driver: driverId,
+        seatsAvailable,
+        meetingPoint,
+        departureTime,
+        riders: [] as string[],
+        pickupZone: '',
+        status: 'open',
+      };
       mockCarpools.push(cp);
       return res.status(201).json(cp);
     } else {

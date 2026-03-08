@@ -48,7 +48,20 @@ export const createEvent = async (req: Request, res: Response) => {
     // @ts-ignore – userId attached by auth middleware
     const userId: string | undefined = req.userId;
     if (useMock) {
-      const event = { _id: new Date().getTime().toString(), title, description, date, location, capacity, createdBy: userId, attendees: [], requiredTrainings: [], tags: [] };
+      const event = {
+        _id: new Date().getTime().toString(),
+        title,
+        description,
+        date,
+        location,
+        capacity,
+        createdBy: userId,
+        attendees: [],
+        requiredTrainings: [],
+        tags: [],
+        estimatedVolunteerHours: 2,
+        attendanceMarked: false,
+      };
       mockEvents.push(event as any);
       return res.status(201).json(event);
     } else {
