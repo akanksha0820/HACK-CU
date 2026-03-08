@@ -9,6 +9,8 @@ Eco-Leaders is a role-aware volunteer operations and community platform for Eco-
 - **Admin / AI:** AI Assistant Console + nonprofit site generator (intake → Gemini content → preview/export), content studio hooks, badge issuance.
 - **AI + voice:** Gemini for descriptions/summaries/recommendations/chat catch-up/site gen; ElevenLabs for audio announcements/onboarding/reminders. Toggle via env.
 - **Seeded demo:** seed script creates 1 admin, 2 coordinators, 8 volunteers, events, announcements, chatrooms/messages, training modules, carpools, badges.
+- **Auth required:** login/registration gate protects app routes; no auto-login. JWT stored in localStorage.
+- **Offline-friendly demo data:** pages fall back to seeded/sample content so buttons and lists are never empty during demos.
 
 ## Tech stack
 - Frontend: React 18, TypeScript, Vite, Tailwind, React Router, Socket.IO client, lucide icons, recharts.
@@ -49,7 +51,7 @@ Run `npm run seed` in `backend` to create:
 - Chatrooms: general, composting, event-logistics (messages on connect).
 - Carpools: example offer for Creek Cleanup.
 - Badges: awarded on attendance action (stub).  
-Make sure `MONGODB_URI` is set before seeding.
+Make sure `MONGODB_URI` is set before seeding (falls back to `mongodb://127.0.0.1:27017/ecoleaders` if unset).
 
 ## Environment
 Create `backend/.env` from `.env.example` and provide:
@@ -60,6 +62,7 @@ JWT_SECRET=supersecret
 GEMINI_API_KEY=your_key_here
 ELEVENLABS_API_KEY=your_key_here
 CLIENT_URL=http://localhost:5173
+VITE_API_BASE_URL=http://localhost:3000
 ```
 Frontend uses `/api` proxy by default; set `VITE_API_BASE_URL` if hosting separately.
 
@@ -72,7 +75,7 @@ npm run seed         # load demo data (requires Mongo up)
 cd ../frontend && npm install
 npm run dev          # Vite dev server (5173)
 ```
-Visit `http://localhost:5173` and use demo accounts above.
+Visit `http://localhost:5173`; register or use demo accounts above (auth is required).
 
 ## Demo flow (suggested)
 1) Login as volunteer (`ava@eco.com`), open **Dashboard**: see upcoming event, announcements, chat, carpools, training progress, stats.  
