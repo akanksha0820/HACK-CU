@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, Megaphone, Car, BookOpen, Star, MessageSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const sample = {
   user: { name: 'Ava', status: 'Active volunteer', streak: 5, badges: 3 },
@@ -47,9 +48,12 @@ export default function Dashboard() {
           <h3 className="mt-2 text-xl font-semibold">{sample.upcomingEvent.title}</h3>
           <p className="text-sm text-[color:var(--muted)]">{sample.upcomingEvent.date}</p>
           <p className="text-xs text-[color:var(--muted)]">{sample.upcomingEvent.location}</p>
-          <a href="/calendar" className="mt-3 inline-flex rounded-full bg-[color:var(--green)] px-4 py-2 text-xs font-semibold text-slate-900 shadow-fern">
+          <Link
+            to="/calendar"
+            className="mt-3 inline-flex rounded-full bg-[color:var(--green)] px-4 py-2 text-xs font-semibold text-slate-900 shadow-fern"
+          >
             Go to calendar
-          </a>
+          </Link>
         </div>
         <div className="glass rounded-2xl border border-[color:rgba(255,65,65,0.35)] p-5">
           <div className="flex items-center justify-between">
@@ -88,9 +92,12 @@ export default function Dashboard() {
                   </span>
                 ))}
               </div>
-              <a href="/calendar" className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900">
+              <Link
+                to="/calendar"
+                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900"
+              >
                 Sign up (calendar)
-              </a>
+              </Link>
             </div>
           ))}
         </div>
