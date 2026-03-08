@@ -15,13 +15,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const demoUsers: Record<string, { password: string; user: User }> = {
-    'ava@eco.com': { password: 'password123', user: { id: 'u1', name: 'Ava Volunteer', email: 'ava@eco.com', role: 'volunteer' } },
-    'casey@eco.com': { password: 'password123', user: { id: 'u2', name: 'Casey Coordinator', email: 'casey@eco.com', role: 'coordinator' } },
-    'alex@eco.com': { password: 'password123', user: { id: 'u3', name: 'Alex Admin', email: 'alex@eco.com', role: 'admin' } },
+    'ava@eco.com': { password: 'password123', user: { id: 'u1', name: 'Ava', email: 'ava@eco.com', role: 'volunteer' } },
+    'bob@eco.com': { password: 'password123', user: { id: 'u2', name: 'Bob', email: 'bob@eco.com', role: 'coordinator' } },
+    'jim@eco.com': { password: 'password123', user: { id: 'u3', name: 'Jim', email: 'jim@eco.com', role: 'admin' } },
   };
 
-  const stored = typeof window !== 'undefined' ? localStorage.getItem('demoUser') : null;
-  const [user, setUser] = useState<User | null>(stored ? JSON.parse(stored) : null);
+  const [user, setUser] = useState<User | null>(null);
   const [token] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,10 +29,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const entry = demoUsers[email.toLowerCase()];
     if (!entry || entry.password !== password) {
       setLoading(false);
-      throw new Error('Invalid credentials. Demo users: ava@eco.com, casey@eco.com, alex@eco.com (password123).');
+      throw new Error('Invalid credentials. Demo users: ava@eco.com, bob@eco.com, jim@eco.com (password123).');
     }
     setUser(entry.user);
-    localStorage.setItem('demoUser', JSON.stringify(entry.user));
     setLoading(false);
   };
   const register = async () => {

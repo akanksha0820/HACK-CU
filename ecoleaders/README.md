@@ -12,8 +12,8 @@ Then open http://localhost:5173.
 
 Demo logins (password: `password123`):
 - ava@eco.com — volunteer
-- casey@eco.com — coordinator
-- alex@eco.com — admin
+- bob@eco.com — coordinator
+- jim@eco.com — admin
 
 ## Features that are live in this demo
 - Volunteer dashboard widgets with working CTA links and alerts.

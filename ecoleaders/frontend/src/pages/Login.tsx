@@ -70,8 +70,8 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-4 text-sm text-[color:var(--muted)]">
-          Demo users (password: <strong>password123</strong>): ava@eco.com (volunteer) · casey@eco.com (coordinator) ·
-          alex@eco.com (admin)
+          Demo users (password: <strong>password123</strong>): ava@eco.com (volunteer) · bob@eco.com (coordinator) ·
+          jim@eco.com (admin)
         </p>
       </div>
     </div>

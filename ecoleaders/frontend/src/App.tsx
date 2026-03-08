@@ -20,7 +20,6 @@ import AITools from './pages/AITools';
 import { AppShell } from './components/AppShell';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
-import Register from './pages/Register';
 
 function Protected({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -44,7 +43,6 @@ function AppRoutes() {
       {/* login/register disabled; keep landing */}
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
 
       {/* Volunteer app */}
       <Route

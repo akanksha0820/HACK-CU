@@ -11,8 +11,8 @@ Open http://localhost:5173.
 
 Demo logins (password `password123`):
 - ava@eco.com (volunteer)
-- casey@eco.com (coordinator)
-- alex@eco.com (admin)
+- bob@eco.com (coordinator)
+- jim@eco.com (admin)
 
 ## Optional flags
 - `frontend/.env` → `VITE_GEMINI_API_KEY=...` to use your Gemini key for chat recaps + site gen (otherwise a demo summary is shown).

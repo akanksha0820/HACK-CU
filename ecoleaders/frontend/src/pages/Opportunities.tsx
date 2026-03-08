@@ -1,6 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { sampleEvents } from '../sampleData';
+import api from '../api';
+import { useAuth } from '../context/AuthContext';
 
 type Item = {
   id: string;
@@ -16,10 +18,13 @@ type Item = {
 };
 
 export default function Opportunities() {
+  const { user } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signed, setSigned] = useState<Set<string>>(new Set());
   const [items, setItems] = useState<Item[]>([]);
+  const [signupList, setSignupList] = useState<Record<string, { name: string; email?: string; at: string }[]> | null>(null);
+  const [signupVisible, setSignupVisible] = useState<boolean>(true);
 
   const filterChips = useMemo(
     () => ['composting', 'education', 'cleanup', 'advocacy', 'private'],
@@ -40,7 +45,18 @@ export default function Opportunities() {
       category: ev.category,
     }));
     setItems(mapped);
+    fetchSignups();
   }, []);
+
+  const fetchSignups = async () => {
+    try {
+      const res = await api.get('/demo/signups');
+      setSignupList(res.data || {});
+      setSignupVisible(true);
+    } catch (_err) {
+      setSignupVisible(false);
+    }
+  };
 
   const handleSignup = async (id: string) => {
     setMessage(null);
@@ -49,6 +65,16 @@ export default function Opportunities() {
       setMessage('Submission successful: you are signed up for this opportunity.');
       alert('Signup successful (demo).');
       setSigned(new Set(signed).add(id));
+      try {
+        await api.post('/demo/signups', {
+          eventId: id,
+          name: user?.name || 'Volunteer',
+          email: user?.email,
+        });
+        fetchSignups();
+      } catch (_e) {
+        // ignore if shared list service unavailable
+      }
     } catch (err: any) {
       const detail = err?.response?.data?.message;
       setError(detail || 'Signup failed (auth or server). If running demo/mock, this may be informational only.');
@@ -120,6 +146,34 @@ export default function Opportunities() {
           </div>
         ))}
       </div>
+
+      {signupVisible && signupList && (
+        <div className="glass rounded-2xl p-5">
+          <h3 className="text-lg font-semibold">Live signups (shared demo)</h3>
+          <p className="text-sm text-[color:var(--muted)]">If the service is offline, this block hides itself.</p>
+          <div className="mt-3 space-y-3">
+            {items.map((item) => {
+              const list = signupList[item.id] || [];
+              if (list.length === 0) return null;
+              return (
+                <div key={item.id} className="rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] p-4">
+                  <p className="text-sm font-semibold">{item.title}</p>
+                  <div className="mt-2 space-y-1 text-xs text-[color:var(--muted)]">
+                    {list.map((s, idx) => (
+                      <div key={idx}>
+                        {s.name} {s.email ? `(${s.email})` : ''} — {new Date(s.at).toLocaleString()}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+            {Object.values(signupList).every((arr) => arr.length === 0) && (
+              <p className="text-sm text-[color:var(--muted)]">No signups yet.</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

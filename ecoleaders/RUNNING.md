@@ -16,8 +16,8 @@ Open http://localhost:5173 in your browser.
 ```
 Email              Password      Role
 ava@eco.com        password123   volunteer
-casey@eco.com      password123   coordinator
-alex@eco.com       password123   admin
+bob@eco.com        password123   coordinator
+jim@eco.com        password123   admin
 ```
 
 ## Optional: enable Gemini recaps/AI

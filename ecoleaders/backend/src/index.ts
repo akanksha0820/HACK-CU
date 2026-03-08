@@ -20,6 +20,7 @@ import chatroomRoutes from './routes/chatroomRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import badgeRoutes from './routes/badgeRoutes';
 import { initSocket } from './services/notificationService';
+import demoRoutes from './routes/demoRoutes';
 import User from './models/User';
 import Event from './models/Event';
 import Announcement from './models/Announcement';
@@ -82,6 +83,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/chatrooms', chatroomRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/badges', badgeRoutes);
+app.use('/api/demo', demoRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
