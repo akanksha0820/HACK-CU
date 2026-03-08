@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { sampleChatMessages } from '../sampleData';
+import api from '../api';
 
 interface ChatMessage {
   channel: string;
@@ -49,13 +50,43 @@ export default function Chat() {
     }
   }, [channel]);
 
+  // load history via API (fallback to sample) on channel change
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await api.get<ChatMessage[]>(`/chatrooms/${channel}/messages`);
+        setMessages(res.data);
+      } catch (err) {
+        setMessages(sampleChatMessages.filter((m) => m.channel === channel));
+      }
+    };
+    fetchHistory();
+  }, [channel]);
+
   const sendMessage = () => {
     if (!socket || !messageInput.trim()) return;
-    socket.emit('chat', {
+    const local: ChatMessage = {
       channel,
       content: messageInput,
-      token: localStorage.getItem('token'),
-    });
+      sender: 'You',
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, local]);
+    socket.emit(
+      'chat',
+      {
+        channel,
+        content: messageInput,
+        token: localStorage.getItem('token'),
+      },
+      (ack: any) => {
+        if (ack && ack.error) {
+          // roll back if server rejects
+          setMessages((prev) => prev.filter((m) => m !== local));
+          alert(ack.error);
+        }
+      },
+    );
     setMessageInput('');
   };
 

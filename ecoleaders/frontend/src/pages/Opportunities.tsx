@@ -43,7 +43,8 @@ export default function Opportunities() {
       await api.post(`/events/${id}/signup`);
       setMessage('Submission successful: you are signed up for this opportunity.');
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Signup recorded (mock if offline).');
+      const detail = err?.response?.data?.message;
+      setError(detail || 'Signup failed (auth or server). If running demo/mock, this may be informational only.');
     }
   };
 
