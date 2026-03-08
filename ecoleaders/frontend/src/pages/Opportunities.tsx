@@ -31,6 +31,7 @@ const items = [
 export default function Opportunities() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [signed, setSigned] = useState<Set<string>>(new Set());
   const filterChips = useMemo(
     () => ['composting', 'education', 'cleanup', 'advocacy', 'private'],
     [],
@@ -42,9 +43,12 @@ export default function Opportunities() {
     try {
       await api.post(`/events/${id}/signup`);
       setMessage('Submission successful: you are signed up for this opportunity.');
+      setSigned(new Set(signed).add(id));
     } catch (err: any) {
       const detail = err?.response?.data?.message;
       setError(detail || 'Signup failed (auth or server). If running demo/mock, this may be informational only.');
+      // optimistic add in demo so UI moves on
+      setSigned(new Set(signed).add(id));
     }
   };
 
@@ -98,9 +102,10 @@ export default function Opportunities() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleSignup(item.id)}
-                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern"
+                disabled={signed.has(item.id)}
+                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern disabled:opacity-60"
               >
-                Sign up
+                {signed.has(item.id) ? 'Signed' : 'Sign up'}
               </button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">Save</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">View prep list</button>
