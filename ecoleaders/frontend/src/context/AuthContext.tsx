@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import api from '../api';
+import React, { createContext, useContext, useState } from 'react';
 
 type User = { id: string; name: string; email: string; role: 'volunteer' | 'coordinator' | 'admin' };
 
@@ -21,8 +20,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     'alex@eco.com': { password: 'password123', user: { id: 'u3', name: 'Alex Admin', email: 'alex@eco.com', role: 'admin' } },
   };
 
-  const defaultUser = demoUsers['ava@eco.com'].user;
-  const [user, setUser] = useState<User | null>(defaultUser);
+  const stored = typeof window !== 'undefined' ? localStorage.getItem('demoUser') : null;
+  const [user, setUser] = useState<User | null>(stored ? JSON.parse(stored) : null);
   const [token] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,12 +33,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw new Error('Invalid credentials. Demo users: ava@eco.com, casey@eco.com, alex@eco.com (password123).');
     }
     setUser(entry.user);
+    localStorage.setItem('demoUser', JSON.stringify(entry.user));
     setLoading(false);
   };
   const register = async () => {
     throw new Error('Registration disabled in demo');
   };
-  const logout = () => setUser(defaultUser);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('demoUser');
+  };
 
   return (
     <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>

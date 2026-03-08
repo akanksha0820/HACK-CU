@@ -59,7 +59,10 @@ export default function Dashboard() {
           <h3 className="mt-2 text-xl font-semibold">{sample.announcement.title}</h3>
           <p className="text-sm text-[color:var(--muted)]">Safety briefing notice</p>
           <div className="mt-3 flex gap-2">
-            <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">
+            <button
+              onClick={() => alert('Playing safety briefing audio (demo).')}
+              className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]"
+            >
               Play audio
             </button>
           </div>
@@ -100,7 +103,10 @@ export default function Dashboard() {
             <div className="h-2 w-[60%] rounded-full bg-[color:var(--green)]" />
           </div>
           <p className="text-xs text-[color:var(--muted)]">Next: {sample.training.next}</p>
-          <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">
+          <button
+            onClick={() => alert('Resuming training module (demo).')}
+            className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]"
+          >
             Continue
           </button>
         </div>

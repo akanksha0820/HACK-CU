@@ -1,13 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Megaphone, Volume2 } from 'lucide-react';
-import { useState } from 'react';
 import { sampleAnnouncements } from '../sampleData';
-
-const items = [
-  { title: 'Safety briefing tonight', body: '6pm on Zoom. Check your inbox for link.', priority: 'urgent', unread: true },
-  { title: 'Orientation', body: 'Complete onboarding before your first shift.', priority: 'normal', unread: false },
-  { title: 'Weather update', body: 'Light rain expected Saturday—bring jacket.', priority: 'high', unread: true },
-];
 
 export default function Announcements() {
   const [message, setMessage] = useState<string | null>(null);
@@ -17,13 +10,21 @@ export default function Announcements() {
   const send = () => {
     setMessage('Submission successful: announcement queued (demo).');
     setError(null);
-    setItems([{ title: 'New announcement', body: 'Quick update', priority: 'normal', unread: true }, ...items]);
+    setItems((prev) => [{ title: 'New announcement', body: 'Quick update', priority: 'normal', unread: true }, ...prev]);
   };
 
   return (
     <div className="space-y-5">
-      {message && <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">{message}</div>}
-      {error && <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
+      {message && (
+        <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">
+          {error}
+        </div>
+      )}
       <header className="flex items-center justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Announcements</p>
@@ -54,6 +55,20 @@ export default function Announcements() {
               </span>
             </div>
             <p className="mt-2 text-sm text-[color:var(--muted)]">{a.body}</p>
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => alert('Push notification sent (demo).')}
+                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern"
+              >
+                Send push
+              </button>
+              <button
+                onClick={send}
+                className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]"
+              >
+                Queue another
+              </button>
+            </div>
             <div className="mt-3 flex items-center gap-2 text-xs text-[color:var(--muted)]">
               <Volume2 size={14} /> Play voice (demo)
             </div>

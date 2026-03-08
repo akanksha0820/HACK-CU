@@ -93,7 +93,7 @@ export const sampleRideRequests = [
 export const sampleAnnouncements = [
   { title: 'Safety briefing tonight', body: '6pm on Zoom. Check your inbox for link.', priority: 'urgent' },
   { title: 'Orientation', body: 'Complete onboarding before your first shift.', priority: 'normal' },
-  { title: 'Weather update', body: 'Light rain expected Saturdayâ€”bring jacket.', priority: 'high' },
+  { title: 'Weather update', body: 'Light rain expected Saturday—bring jacket.', priority: 'high' },
 ];
 
 export const sampleChatMessages = [

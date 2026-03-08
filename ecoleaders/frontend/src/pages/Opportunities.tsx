@@ -47,6 +47,7 @@ export default function Opportunities() {
     setError(null);
     try {
       setMessage('Submission successful: you are signed up for this opportunity.');
+      alert('Signup successful (demo).');
       setSigned(new Set(signed).add(id));
     } catch (err: any) {
       const detail = err?.response?.data?.message;

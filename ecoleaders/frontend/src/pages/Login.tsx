@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -30,8 +30,16 @@ export default function Login() {
       <div className="glass rounded-3xl p-8 shadow-ember">
         <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Sign in</p>
         <h1 className="mt-2 text-3xl font-semibold">Welcome back</h1>
-        {status && <div className="mt-3 rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.1)] px-3 py-2 text-sm text-green">{status}</div>}
-        {error && <div className="mt-3 rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-3 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
+        {status && (
+          <div className="mt-3 rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.1)] px-3 py-2 text-sm text-green">
+            {status}
+          </div>
+        )}
+        {error && (
+          <div className="mt-3 rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-3 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">
+            {error}
+          </div>
+        )}
         <form className="mt-6 space-y-4" onSubmit={onSubmit}>
           <div>
             <label className="text-sm text-[color:var(--muted)]">Email</label>
@@ -62,12 +70,9 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-4 text-sm text-[color:var(--muted)]">
-          Demo users (password: password123): ava@eco.com · casey@eco.com · alex@eco.com
+          Demo users (password: <strong>password123</strong>): ava@eco.com (volunteer) · casey@eco.com (coordinator) ·
+          alex@eco.com (admin)
         </p>
-        <div className="mt-6 rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] p-4 text-sm">
-          <p className="font-semibold">Guest access</p>
-          <p className="text-xs text-[color:var(--muted)]">Username: guest &nbsp;&nbsp; Password: guest</p>
-        </div>
       </div>
     </div>
   );

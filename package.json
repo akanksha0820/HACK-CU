@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "npm install --prefix ecoleaders/backend && npm install --prefix ecoleaders/frontend",
+    "dev": "node scripts/dev.js",
+    "dev:backend": "npm run dev --prefix ecoleaders/backend",
+    "dev:frontend": "npm run dev --prefix ecoleaders/frontend",
+    "build": "npm run build --prefix ecoleaders/backend && npm run build --prefix ecoleaders/frontend",
+    "test": "echo \"No automated tests configured\""
   },
   "keywords": [],
   "author": "",

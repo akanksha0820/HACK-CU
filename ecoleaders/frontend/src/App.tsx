@@ -24,6 +24,12 @@ import Register from './pages/Register';
 
 function Protected({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+
   const shell = useMemo(() => <AppShell role={user?.role || 'volunteer'}>{children}</AppShell>, [children, user?.role]);
   return <>{shell}</>;
 }
@@ -37,6 +43,8 @@ function AppRoutes() {
       <Route path="/contact" element={<Contact />} />
       {/* login/register disabled; keep landing */}
       <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Volunteer app */}
       <Route

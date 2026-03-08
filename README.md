@@ -1,54 +1,29 @@
-# HACK-CU
+# HACK-CU – Eco-Leaders Volunteer Hub (demo)
 
-Eco-Leaders Volunteer Hub v2: a role-aware volunteer, coordinator, and admin/AI platform with dashboards, announcements, chatrooms, carpools, training, analytics, and Gemini/ElevenLabs integrations.
+Full-stack demo for the Eco-Leaders Volunteer Hub (volunteer + coordinator + admin/AI). The default experience is **in-memory** (no Mongo, no Docker) so every page is populated and every button responds.
 
-## Tech Stack
-- Frontend: React 18, TypeScript, Vite, Tailwind CSS
-- Backend: Node.js, Express, TypeScript, Socket.IO, Mongoose
-- Optional: Docker Compose for local orchestration
+## Run it (copy/paste)
+```powershell
+npm run setup   # installs backend + frontend deps
+npm run dev     # starts backend on 3000 and frontend on 5173
+```
+Open http://localhost:5173.
 
-## Project Structure
+Demo logins (password `password123`):
+- ava@eco.com (volunteer)
+- casey@eco.com (coordinator)
+- alex@eco.com (admin)
+
+## Optional flags
+- `frontend/.env` → `VITE_GEMINI_API_KEY=...` to use your Gemini key for chat recaps + site gen (otherwise a demo summary is shown).
+- `backend/.env` (copy from `.env.example`) → set `USE_DB=true` and `MONGODB_URI` to run against Mongo instead of in-memory.
+
+## Repo layout
 ```
 ecoleaders/
-  backend/   # Express + TypeScript API
-  frontend/  # React + Vite client
+  backend/   Express + TypeScript API (in-memory by default)
+  frontend/  React + Vite client
+scripts/dev.js   Starts both servers with one command
 ```
 
-## Quickstart (Local)
-1. Backend
-```bash
-cd ecoleaders/backend
-npm install
-cp .env.example .env
-npm run dev
-```
-Optional: `npm run seed` (requires MongoDB) to load demo admin/coordinators/volunteers, events, announcements, chatrooms, training modules, carpools, badges.
-
-2. Frontend
-```bash
-cd ecoleaders/frontend
-npm install
-npm run dev
-```
-
-The frontend runs on `http://localhost:5173` and proxies API calls to the backend.
-
-## Quick Run (no Mongo required)
-Backend runs in in-memory demo mode by default.
-```bash
-# backend
-cd ecoleaders/backend
-npm install
-npm run dev   # or: npm run build && node dist/index.js
-
-# frontend (new terminal)
-cd ecoleaders/frontend
-npm install
-npm run dev
-```
-Visit http://localhost:5173 (login/register or guest/guest).
-
-## Notes
-- Do not commit `.env` files. Secrets belong in local environment variables.
-- If you need to change the API base URL, update `VITE_API_BASE_URL`.
-- See `ecoleaders/README.md` for detailed feature tour, roles, and API surface.
+More details: `ecoleaders/README.md` (feature tour) and `ecoleaders/RUNNING.md` (runbook).

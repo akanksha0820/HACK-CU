@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { sampleChatMessages } from '../sampleData';
-import api from '../api';
 
 interface ChatMessage {
   channel: string;
@@ -13,6 +12,9 @@ export default function Chat() {
   const [channel, setChannel] = useState<string>('general');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
+  const [aiReply, setAiReply] = useState<string>('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const channels = [
     'general',
     'composting',
@@ -37,6 +39,51 @@ export default function Chat() {
     };
     setMessages((prev) => [...prev, local]);
     setMessageInput('');
+  };
+
+  const askGemini = async () => {
+    setAiLoading(true);
+    setAiError(null);
+    setAiReply('');
+    const pushAiMessage = (text: string) =>
+      setMessages((prev) => [...prev, { channel, content: text, sender: 'Gemini', createdAt: new Date().toISOString() }]);
+    const history = messages
+      .slice(-8)
+      .map((m) => `${m.sender}: ${m.content}`)
+      .join('\n');
+
+    const prompt = `You are the Eco-Leaders volunteer chat assistant. Summarize the last few messages in #${channel}, highlight action items, and answer “what did I miss?” in 2-3 bullet points.\n\nRecent chat:\n${history}`;
+
+    try {
+      const key = import.meta.env.VITE_GEMINI_API_KEY;
+      if (key) {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+          },
+        );
+        const data = await res.json();
+        const text =
+          data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('\n') ||
+          'AI summary unavailable—showing demo.';
+        setAiReply(text);
+        pushAiMessage(text);
+      } else {
+        const demo = 'Demo Gemini summary: • Gloves available • 2 seats from CU at 8:15am • Bring rain jacket for creek cleanup.';
+        setAiReply(demo);
+        pushAiMessage(demo);
+      }
+    } catch (err: any) {
+      setAiError('AI request failed (check GEMINI key or network). Showing demo instead.');
+      const demo = 'Demo Gemini summary: • Gloves available • 2 seats from CU at 8:15am • Bring rain jacket for creek cleanup.';
+      setAiReply(demo);
+      pushAiMessage(demo);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -77,6 +124,16 @@ export default function Chat() {
           <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Live chat</p>
           <h2 className="mt-2 text-2xl font-semibold">#{channel}</h2>
           <p className="mt-1 text-sm text-[color:var(--muted)]">Coordinate shifts and share quick updates.</p>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            <button
+              onClick={askGemini}
+              disabled={aiLoading}
+              className="rounded-full bg-[color:var(--gold)] px-3 py-1 font-semibold text-slate-900 shadow-ember disabled:opacity-60"
+            >
+              {aiLoading ? 'Gemini thinking…' : 'Ask Gemini for recap'}
+            </button>
+            {aiError && <span className="text-[color:rgba(255,200,200,0.9)]">{aiError}</span>}
+          </div>
         </header>
 
         <div className="glass flex-1 rounded-2xl p-5">
@@ -95,6 +152,12 @@ export default function Chat() {
             {messages.length === 0 && (
               <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3 text-sm text-[color:var(--muted)]">
                 No messages yet. Start the briefing.
+              </div>
+            )}
+            {aiReply && (
+              <div className="rounded-xl border border-[color:var(--gold)] bg-[color:rgba(227,176,74,0.08)] px-4 py-3 text-sm text-[color:var(--text)]">
+                <p className="text-xs uppercase tracking-[0.24em] text-gold">Gemini recap</p>
+                <p className="mt-1 whitespace-pre-wrap">{aiReply}</p>
               </div>
             )}
           </div>

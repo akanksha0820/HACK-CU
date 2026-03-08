@@ -71,12 +71,20 @@ function renderSection(title: string, list: any[]) {
                 )}
               </div>
             </div>
-            <button
-              onClick={() => alert('Signup successful (demo).')}
-              className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900"
-            >
-              Sign up
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              <button
+                onClick={() => alert('Signup successful (demo).')}
+                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900"
+              >
+                Sign up
+              </button>
+              <button
+                onClick={() => alert('You will be notified about schedule updates (demo).')}
+                className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[11px] text-[color:var(--text)]"
+              >
+                Notify me
+              </button>
+            </div>
           </div>
           <div className="mt-3 text-xs text-[color:var(--muted)]">
             Gemini prep (stub): “Bring gloves and closed-toe shoes. Weather looks clear.”

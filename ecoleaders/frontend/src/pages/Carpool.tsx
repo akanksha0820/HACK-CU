@@ -47,6 +47,7 @@ export default function Carpool() {
     setMessage(null);
     setError(null);
     setMessage('Submission successful: carpool created.');
+    alert('Carpool created (demo).');
     setForm({ seatsAvailable: 3, meetingPoint: '', departureTime: '' });
     setCarpools((prev) => [
       ...prev,
@@ -65,6 +66,7 @@ export default function Carpool() {
     setMessage(null);
     setError(null);
     setMessage('Submission successful: joined carpool.');
+    alert('Joined carpool (demo).');
     setCarpools((prev) =>
       prev.map((c) => (c._id === carpoolId ? { ...c, riders: [...c.riders, { _id: 'self', name: 'You' }] } : c)),
     );
