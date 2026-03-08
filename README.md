@@ -33,18 +33,20 @@ npm run dev
 
 The frontend runs on `http://localhost:5173` and proxies API calls to the backend.
 
-## Docker (Recommended)
-Runs Mongo, backend, and frontend together.
+## Quick Run (no Mongo required)
+Backend runs in in-memory demo mode by default.
 ```bash
-cd ecoleaders
-# optional: export secrets for backend
-# set JWT_SECRET, GEMINI_API_KEY, ELEVENLABS_API_KEY, CLIENT_URL=http://localhost:5173
-docker-compose up --build
+# backend
+cd ecoleaders/backend
+npm install
+npm run dev   # or: npm run build && node dist/index.js
+
+# frontend (new terminal)
+cd ecoleaders/frontend
+npm install
+npm run dev
 ```
-Services:
-- `mongo` on 27017 (internal)
-- `backend` on http://localhost:3000 (MONGODB_URI points to `mongo`)
-- `frontend` on http://localhost:5173 (Vite dev, proxied to backend)
+Visit http://localhost:5173 (login/register or guest/guest).
 
 ## Notes
 - Do not commit `.env` files. Secrets belong in local environment variables.

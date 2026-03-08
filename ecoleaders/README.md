@@ -8,13 +8,13 @@ Eco-Leaders is a role-aware volunteer operations and community platform for Eco-
 - **Staff power:** coordinator dashboard KPIs, event manager (auto chat + announcement), volunteer manager segments, attendance → hours/badges, reports/analytics (recharts).
 - **Admin / AI:** AI Assistant Console + nonprofit site generator (intake → Gemini content → preview/export), content studio hooks, badge issuance.
 - **AI + voice:** Gemini for descriptions/summaries/recommendations/chat catch-up/site gen; ElevenLabs for audio announcements/onboarding/reminders. Toggle via env.
-- **Seeded demo:** seed script creates 1 admin, 2 coordinators, 8 volunteers, events, announcements, chatrooms/messages, training modules, carpools, badges.
+- **Seeded demo:** in-memory data (or auto-seed when DB empty) creates 1 admin, 2 coordinators, 8 volunteers, events, announcements, chatrooms/messages, training modules, carpools, badges.
 - **Auth required:** login/registration gate protects app routes; no auto-login. JWT stored in localStorage.
 - **Offline-friendly demo data:** pages fall back to seeded/sample content so buttons and lists are never empty during demos.
 
 ## Tech stack
 - Frontend: React 18, TypeScript, Vite, Tailwind, React Router, Socket.IO client, lucide icons, recharts.
-- Backend: Node 18, Express, TypeScript, Socket.IO, Mongoose (MongoDB Atlas), dotenv, bcrypt, JWT.
+- Backend: Node 18, Express, TypeScript, Socket.IO, optional Mongoose (only if USE_DB=true), dotenv, bcrypt, JWT.
 - AI/Voice: Gemini API, ElevenLabs API (pluggable mock if no keys).
 
 ## Project structure (high level)
@@ -43,39 +43,34 @@ docker-compose.yml  Optional local stack (MongoDB + app)
 - `/api/events`, `/api/carpool`, `/api/site`, `/api/ai` (Gemini/ElevenLabs helpers)
 
 ## Seed data
-Run `npm run seed` in `backend` to create:
-- Users: admin (`admin@eco.com`), coordinators (`coord1@eco.com`, `coord2@eco.com`), volunteers (`ava@eco.com`, `ben@eco.com`, ...). Password for all: `password123`.
-- Events: Community Compost Workshop, Saturday Creek Cleanup.
-- Announcements: reminder + onboarding note.
-- Training modules: Welcome, Event Safety Basics, Community Guidelines.
-- Chatrooms: general, composting, event-logistics (messages on connect).
-- Carpools: example offer for Creek Cleanup.
-- Badges: awarded on attendance action (stub).  
-Make sure `MONGODB_URI` is set before seeding (falls back to `mongodb://127.0.0.1:27017/ecoleaders` if unset).
+In-memory demo data loads automatically (or auto-seeds DB if `USE_DB=true` and collections are empty).
+Users: admin (`admin@eco.com`), coordinators (`coord1@eco.com`, `coord2@eco.com`), volunteers (`ava@eco.com`, `ben@eco.com`, ...), plus `guest/guest`. Password for all seeded users: `password123`.
 
 ## Environment
 Create `backend/.env` from `.env.example` and provide:
 ```
 PORT=3000
-MONGODB_URI=mongodb+srv://...
-JWT_SECRET=supersecret
+CLIENT_URL=http://localhost:5173
+USE_DB=false           # set to true only if you want Mongo
+MONGODB_URI=...        # required if USE_DB=true
+JWT_SECRET=changeme
 GEMINI_API_KEY=your_key_here
 ELEVENLABS_API_KEY=your_key_here
-CLIENT_URL=http://localhost:5173
 VITE_API_BASE_URL=http://localhost:3000
 ```
-Frontend uses `/api` proxy by default; set `VITE_API_BASE_URL` if hosting separately.
+Frontend uses `/api` proxy to http://localhost:3000 by default.
 
 ## Install & run
 ```
+# backend (in-memory by default)
 cd backend && npm install
-npm run dev          # dev API with hot reload
-npm run seed         # load demo data (requires Mongo up)
+npm run dev          # or build + node dist/index.js
 
+# frontend
 cd ../frontend && npm install
 npm run dev          # Vite dev server (5173)
 ```
-Visit `http://localhost:5173`; register or use demo accounts above (auth is required).
+Visit `http://localhost:5173`; register/use demo accounts (auth required).
 
 ## Demo flow (suggested)
 1) Login as volunteer (`ava@eco.com`), open **Dashboard**: see upcoming event, announcements, chat, carpools, training progress, stats.  
