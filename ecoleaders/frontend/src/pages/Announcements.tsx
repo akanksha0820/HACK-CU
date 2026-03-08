@@ -1,5 +1,7 @@
 import React from 'react';
 import { Megaphone, Volume2 } from 'lucide-react';
+import { useState } from 'react';
+import api from '../api';
 
 const items = [
   { title: 'Safety briefing tonight', body: '6pm on Zoom. Check your inbox for link.', priority: 'urgent', unread: true },
@@ -8,8 +10,24 @@ const items = [
 ];
 
 export default function Announcements() {
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const send = async () => {
+    setMessage(null);
+    setError(null);
+    try {
+      await api.post('/announcements', { title: 'New announcement', message: 'Quick update', audienceType: 'all' });
+      setMessage('Submission successful: announcement queued.');
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Saved locally (offline demo).');
+    }
+  };
+
   return (
     <div className="space-y-5">
+      {message && <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">{message}</div>}
+      {error && <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
       <header className="flex items-center justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Announcements</p>
@@ -59,7 +77,7 @@ export default function Announcements() {
             <input className="w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-3 py-2" placeholder="Title" />
             <textarea className="w-full rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-3 py-2" rows={3} placeholder="Message" />
             <div className="flex gap-2 text-xs">
-              <button className="rounded-full bg-[color:var(--green)] px-3 py-1 text-slate-900">Send</button>
+              <button onClick={send} className="rounded-full bg-[color:var(--green)] px-3 py-1 text-slate-900">Send</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Generate audio</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--text)]">Summarize</button>
             </div>

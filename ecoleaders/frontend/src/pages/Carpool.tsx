@@ -23,6 +23,8 @@ export default function Carpool() {
   const [carpools, setCarpools] = useState<Carpool[]>([]);
   const [form, setForm] = useState({ seatsAvailable: 3, meetingPoint: '', departureTime: '' });
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     api
@@ -40,6 +42,8 @@ export default function Carpool() {
 
   const loadCarpools = async (eventId: string) => {
     setSelectedEventId(eventId);
+    setMessage(null);
+    setError(null);
     try {
       const res = await api.get<Carpool[]>(`/carpool/event/${eventId}`);
       setCarpools(res.data);
@@ -49,12 +53,15 @@ export default function Carpool() {
   };
 
   const handleCreate = async () => {
+    setMessage(null);
+    setError(null);
     try {
       await api.post('/carpool', { ...form, eventId: selectedEventId });
-      alert('Carpool created');
+      setMessage('Submission successful: carpool created.');
       setForm({ seatsAvailable: 3, meetingPoint: '', departureTime: '' });
       loadCarpools(selectedEventId);
     } catch (err: any) {
+      setError(err.response?.data?.message || 'Saved locally (offline demo).');
       // fallback: mock-create locally
       setCarpools((prev) => [
         ...prev,
@@ -71,17 +78,21 @@ export default function Carpool() {
   };
 
   const handleJoin = async (carpoolId: string) => {
+    setMessage(null);
+    setError(null);
     try {
       await api.post(`/carpool/${carpoolId}/join`);
-      alert('Joined carpool');
+      setMessage('Submission successful: joined carpool.');
       loadCarpools(selectedEventId);
     } catch (err: any) {
-      alert('Joined (mocked)');
+      setError(err.response?.data?.message || 'Joined (mocked demo).');
     }
   };
 
   return (
     <div className="space-y-6">
+      {message && <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">{message}</div>}
+      {error && <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
       <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Mobility</p>

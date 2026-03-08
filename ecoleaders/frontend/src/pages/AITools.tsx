@@ -12,17 +12,22 @@ export default function AITools() {
   });
   const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const generate = async () => {
     setLoading(true);
+    setMessage(null);
+    setError(null);
     try {
       const res = await api.post('/site/generate', {
         nonprofitName: intake.name,
         mission: intake.mission,
       });
       setHtml(res.data.templateHtml || '<h1>Gemini response placeholder</h1>');
+      setMessage('Submission successful: site generated.');
     } catch (err) {
-      setHtml('<p>Gemini generation requires API key</p>');
+      setError('Gemini generation requires API key or connectivity.');
     } finally {
       setLoading(false);
     }
@@ -40,6 +45,8 @@ export default function AITools() {
           Live API-ready
         </div>
       </header>
+      {message && <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">{message}</div>}
+      {error && <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
 
       <div className="grid gap-4 md:grid-cols-[0.6fr_0.4fr]">
         <div className="glass space-y-3 rounded-2xl p-5">

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
 import api from '../api';
+import { useState } from 'react';
 
 const items = [
   {
@@ -28,22 +29,28 @@ const items = [
 ];
 
 export default function Opportunities() {
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const filterChips = useMemo(
     () => ['composting', 'education', 'cleanup', 'advocacy', 'private'],
     [],
   );
 
   const handleSignup = async (id: string) => {
+    setMessage(null);
+    setError(null);
     try {
       await api.post(`/events/${id}/signup`);
-      alert('Signed up!');
+      setMessage('Submission successful: you are signed up for this opportunity.');
     } catch (err: any) {
-      alert(err?.response?.data?.message || 'Signup recorded (mock if offline)');
+      setError(err?.response?.data?.message || 'Signup recorded (mock if offline).');
     }
   };
 
   return (
     <div className="space-y-5">
+      {message && <div className="rounded-xl border border-[color:var(--border)] bg-[color:rgba(47,191,131,0.12)] px-4 py-2 text-sm text-green">{message}</div>}
+      {error && <div className="rounded-xl border border-[color:rgba(255,65,65,0.35)] bg-[color:rgba(255,65,65,0.08)] px-4 py-2 text-sm text-[color:rgba(255,200,200,0.9)]">{error}</div>}
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.32em] text-[color:var(--muted)]">Opportunities</p>
