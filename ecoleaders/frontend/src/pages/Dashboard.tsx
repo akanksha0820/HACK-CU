@@ -47,9 +47,9 @@ export default function Dashboard() {
           <h3 className="mt-2 text-xl font-semibold">{sample.upcomingEvent.title}</h3>
           <p className="text-sm text-[color:var(--muted)]">{sample.upcomingEvent.date}</p>
           <p className="text-xs text-[color:var(--muted)]">{sample.upcomingEvent.location}</p>
-          <button className="mt-3 rounded-full bg-[color:var(--green)] px-4 py-2 text-xs font-semibold text-slate-900 shadow-fern">
-            View details
-          </button>
+          <a href="/calendar" className="mt-3 inline-flex rounded-full bg-[color:var(--green)] px-4 py-2 text-xs font-semibold text-slate-900 shadow-fern">
+            Go to calendar
+          </a>
         </div>
         <div className="glass rounded-2xl border border-[color:rgba(255,65,65,0.35)] p-5">
           <div className="flex items-center justify-between">
@@ -57,9 +57,8 @@ export default function Dashboard() {
             <Megaphone size={16} className="text-gold" />
           </div>
           <h3 className="mt-2 text-xl font-semibold">{sample.announcement.title}</h3>
-          <p className="text-sm text-[color:var(--muted)]">Acknowledge to dismiss</p>
+          <p className="text-sm text-[color:var(--muted)]">Safety briefing notice</p>
           <div className="mt-3 flex gap-2">
-            <button className="rounded-full bg-[color:var(--gold)] px-3 py-1 text-xs font-semibold text-slate-900">Got it</button>
             <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">
               Play audio
             </button>
@@ -86,7 +85,9 @@ export default function Dashboard() {
                   </span>
                 ))}
               </div>
-              <button className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900">Sign up</button>
+              <a href="/calendar" className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900">
+                Sign up (calendar)
+              </a>
             </div>
           ))}
         </div>
@@ -111,31 +112,24 @@ export default function Dashboard() {
             <MessageSquare size={16} className="text-gold" />
             <h3 className="text-lg font-semibold">Chat activity</h3>
           </div>
-          {sample.chat.map((c) => (
-            <div key={c.channel} className="rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold">{c.channel}</p>
-                <span className="text-[11px] text-gold">{c.unread} unread</span>
-              </div>
-              <p className="text-xs text-[color:var(--muted)]">{c.snippet}</p>
-            </div>
-          ))}
+          <a
+            href="/chat"
+            className="block rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3 text-sm font-semibold text-gold text-center"
+          >
+            Go to chatrooms
+          </a>
         </div>
         <div className="glass space-y-3 rounded-2xl p-5">
           <div className="flex items-center gap-2">
             <Car size={16} className="text-gold" />
             <h3 className="text-lg font-semibold">Carpools near you</h3>
           </div>
-          {sample.carpools.map((c) => (
-            <div key={c.event} className="rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3 text-sm">
-              <p className="font-semibold">{c.event}</p>
-              <p className="text-xs text-[color:var(--muted)]">{c.seats}</p>
-              <p className="text-xs text-[color:var(--muted)]">{c.departure}</p>
-              <button className="mt-2 rounded-full bg-[color:var(--gold)] px-3 py-1 text-[11px] font-semibold text-slate-900">
-                Request seat
-              </button>
-            </div>
-          ))}
+          <a
+            href="/carpools"
+            className="block rounded-xl border border-[color:var(--border)] bg-[color:var(--panel-2)] px-4 py-3 text-sm font-semibold text-gold text-center"
+          >
+            Go to carpools
+          </a>
         </div>
         <div className="glass space-y-3 rounded-2xl p-5">
           <div className="flex items-center gap-2">
