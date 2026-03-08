@@ -137,8 +137,6 @@ export default function Opportunities() {
               >
                 {signed.has(item.id) ? 'Signed' : 'Sign up'}
               </button>
-              <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">Save</button>
-              <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">View prep list</button>
             </div>
             <p className="text-xs text-[color:var(--muted)]">
               Gemini: “This fits because you’ve completed compost training and live near Boulder.”
