@@ -41,6 +41,7 @@ export const joinCarpool = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Already in this carpool' });
     }
     if (carpool.riders.length >= carpool.seatsAvailable) {
+      carpool.status = 'full';
       return res.status(400).json({ message: 'No seats available' });
     }
     carpool.riders.push(userId as any);

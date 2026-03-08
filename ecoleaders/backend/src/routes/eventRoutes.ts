@@ -8,9 +8,9 @@ router.get('/', listEvents);
 router.get('/:id', getEvent);
 
 // Protected routes (only logged in users)
-router.post('/', authenticate, authorize(['staff']), createEvent);
-router.put('/:id', authenticate, authorize(['staff']), updateEvent);
-router.delete('/:id', authenticate, authorize(['staff']), deleteEvent);
+router.post('/', authenticate, authorize(['coordinator', 'admin']), createEvent);
+router.put('/:id', authenticate, authorize(['coordinator', 'admin']), updateEvent);
+router.delete('/:id', authenticate, authorize(['coordinator', 'admin']), deleteEvent);
 router.post('/:id/signup', authenticate, signUpEvent);
 
 export default router;

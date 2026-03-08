@@ -46,7 +46,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap gap-3">
               <NavLink
-                to="/events"
+                to="/opportunities"
                 className="rounded-full bg-[color:var(--green)] px-5 py-3 text-sm font-semibold text-slate-900 shadow-fern transition hover:bg-[color:var(--green-2)]"
               >
                 Explore events

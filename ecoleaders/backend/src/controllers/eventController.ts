@@ -69,6 +69,8 @@ export const signUpEvent = async (req: Request, res: Response) => {
   try {
     // @ts-ignore
     const userId: string = req.userId;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
     if (event.attendees.includes(userId as any)) {
@@ -76,6 +78,13 @@ export const signUpEvent = async (req: Request, res: Response) => {
     }
     if (event.attendees.length >= event.capacity) {
       return res.status(400).json({ message: 'Event is full' });
+    }
+    // training gate
+    const missingTraining = event.requiredTrainings?.filter((reqId) => !(user.completedTrainings || []).includes(reqId));
+    if (missingTraining && missingTraining.length > 0) {
+      return res
+        .status(400)
+        .json({ message: 'Training required before signup', missingTraining });
     }
     event.attendees.push(userId as any);
     await event.save();

@@ -13,10 +13,18 @@ export default function Chat() {
   const [channel, setChannel] = useState<string>('general');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState('');
-  const channels = ['general', 'events', 'carpool', 'training'];
+  const channels = [
+    'general',
+    'composting',
+    'environmental-education',
+    'event-logistics',
+    'advocacy',
+    'carpool-coordination',
+    'new-volunteers',
+  ];
 
   useEffect(() => {
-    const newSocket = io('/', {
+    const newSocket = io((import.meta as any).env?.VITE_API_BASE_URL || '/', {
       auth: {
         token: localStorage.getItem('token'),
       },

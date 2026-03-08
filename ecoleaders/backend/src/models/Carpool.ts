@@ -7,6 +7,11 @@ export interface ICarpool extends Document {
   riders: Types.ObjectId[];
   meetingPoint: string;
   departureTime: Date;
+  returnTrip?: boolean;
+  accessibilityNotes?: string;
+  pickupZone?: string;
+  routeNotes?: string;
+  status?: 'open' | 'full' | 'cancelled';
 }
 
 const carpoolSchema = new Schema<ICarpool>({
@@ -16,6 +21,11 @@ const carpoolSchema = new Schema<ICarpool>({
   riders: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   meetingPoint: { type: String, required: true },
   departureTime: { type: Date, required: true },
+  returnTrip: { type: Boolean, default: true },
+  accessibilityNotes: String,
+  pickupZone: String,
+  routeNotes: String,
+  status: { type: String, enum: ['open', 'full', 'cancelled'], default: 'open' },
 });
 
 export default model<ICarpool>('Carpool', carpoolSchema);

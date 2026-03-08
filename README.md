@@ -1,6 +1,6 @@
 # HACK-CU
 
-Eco-Leaders Volunteer Hub: a full-stack web platform to coordinate volunteer events, carpools, chat, training, and admin tools.
+Eco-Leaders Volunteer Hub v2: a role-aware volunteer, coordinator, and admin/AI platform with dashboards, announcements, chatrooms, carpools, training, analytics, and Gemini/ElevenLabs integrations.
 
 ## Tech Stack
 - Frontend: React 18, TypeScript, Vite, Tailwind CSS
@@ -22,6 +22,7 @@ npm install
 cp .env.example .env
 npm run dev
 ```
+Optional: `npm run seed` (requires MongoDB) to load demo admin/coordinators/volunteers, events, announcements, chatrooms, training modules, carpools, badges.
 
 2. Frontend
 ```bash
@@ -41,3 +42,4 @@ docker-compose up --build
 ## Notes
 - Do not commit `.env` files. Secrets belong in local environment variables.
 - If you need to change the API base URL, update `VITE_API_BASE_URL`.
+- See `ecoleaders/README.md` for detailed feature tour, roles, and API surface.

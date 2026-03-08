@@ -46,3 +46,9 @@ export function broadcastAnnouncement(title: string, message: string) {
   if (!ioInstance) return;
   ioInstance.emit('announcement', { title, message, date: new Date() });
 }
+
+export function sendAnnouncement(payload: any) {
+  if (!ioInstance) return Promise.resolve();
+  ioInstance.emit('announcement', payload);
+  return Promise.resolve();
+}

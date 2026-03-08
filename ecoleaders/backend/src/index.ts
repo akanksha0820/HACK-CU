@@ -9,6 +9,15 @@ import eventRoutes from './routes/eventRoutes';
 import carpoolRoutes from './routes/carpoolRoutes';
 import siteRoutes from './routes/siteRoutes';
 import aiRoutes from './routes/aiRoutes';
+import announcementRoutes from './routes/announcementRoutes';
+import trainingRoutes from './routes/trainingRoutes';
+import dashboardRoutes from './routes/dashboardRoutes';
+import analyticsRoutes from './routes/analyticsRoutes';
+import volunteerRoutes from './routes/volunteerRoutes';
+import attendanceRoutes from './routes/attendanceRoutes';
+import chatroomRoutes from './routes/chatroomRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import badgeRoutes from './routes/badgeRoutes';
 import { initSocket } from './services/notificationService';
 
 // Load environment variables
@@ -55,6 +64,15 @@ app.use('/api/events', eventRoutes);
 app.use('/api/carpool', carpoolRoutes);
 app.use('/api/site', siteRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/training', trainingRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/chatrooms', chatroomRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/badges', badgeRoutes);
 
 // Serve static frontend in production
 if (process.env.NODE_ENV === 'production') {
