@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Megaphone, Volume2 } from 'lucide-react';
 import { sampleAnnouncements } from '../sampleData';
+import { requestNotifyPermission, showLocalNotification } from '../utils/notify';
 
 export default function Announcements() {
   const [message, setMessage] = useState<string | null>(null);
@@ -57,7 +58,15 @@ export default function Announcements() {
             <p className="mt-2 text-sm text-[color:var(--muted)]">{a.body}</p>
             <div className="mt-3 flex gap-2">
               <button
-                onClick={() => alert('Push notification sent (demo).')}
+                onClick={async () => {
+                  try {
+                    await requestNotifyPermission();
+                    showLocalNotification('Eco-Leaders', `${a.title} — ${a.body}`);
+                    alert('Push notification sent (browser-local demo).');
+                  } catch (err: any) {
+                    alert(err?.message || 'Notifications not available.');
+                  }
+                }}
                 className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern"
               >
                 Send push

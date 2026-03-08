@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, MapPin, Link as LinkIcon, Shield } from 'lucide-react';
 import { sampleEvents } from '../sampleData';
+import { requestNotifyPermission, showLocalNotification } from '../utils/notify';
 
 export default function CalendarPage() {
   return (
@@ -79,7 +80,15 @@ function renderSection(title: string, list: any[]) {
                 Sign up
               </button>
               <button
-                onClick={() => alert('You will be notified about schedule updates (demo).')}
+                onClick={async () => {
+                  try {
+                    await requestNotifyPermission();
+                    showLocalNotification('Eco-Leaders', `Updates enabled for ${ev.title}`);
+                    alert('Notifications enabled (browser-local demo).');
+                  } catch (err: any) {
+                    alert(err?.message || 'Notifications not available.');
+                  }
+                }}
                 className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[11px] text-[color:var(--text)]"
               >
                 Notify me
