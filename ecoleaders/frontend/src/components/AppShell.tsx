@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Bell, Home, Calendar, Megaphone, MessageSquare, Car, BookOpen, Award, BarChart, Settings, Sparkles } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 type Role = 'volunteer' | 'coordinator' | 'admin';
 
@@ -41,6 +42,7 @@ const navMap: Record<Role, NavItem[]> = {
 
 export function AppShell({ children, role }: AppShellProps) {
   const nav = navMap[role] || navMap.volunteer;
+  const { logout, user } = useAuth();
 
   return (
     <div className="min-h-screen bg-[color:var(--bg)] text-[color:var(--text)]">
@@ -100,6 +102,12 @@ export function AppShell({ children, role }: AppShellProps) {
                 <div className="h-9 w-9 rounded-full bg-[color:var(--green)] text-xs font-semibold text-slate-900 flex items-center justify-center">
                   {role.charAt(0).toUpperCase()}
                 </div>
+                <button
+                  onClick={logout}
+                  className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--muted)] hover:border-[color:var(--gold)]"
+                >
+                  Logout {user?.name?.split(' ')[0] || ''}
+                </button>
               </div>
             </div>
           </header>

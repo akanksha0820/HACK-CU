@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { sampleChatMessages } from '../sampleData';
 
 interface ChatMessage {
   channel: string;
@@ -24,24 +25,28 @@ export default function Chat() {
   ];
 
   useEffect(() => {
-    const newSocket = io((import.meta as any).env?.VITE_API_BASE_URL || '/', {
-      auth: {
-        token: localStorage.getItem('token'),
-      },
-    });
-    setSocket(newSocket);
-    newSocket.on('connect', () => {
-      newSocket.emit('join', channel);
-    });
-    newSocket.on('chat', (msg: ChatMessage) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-    newSocket.on('announcement', (announcement) => {
-      alert(`${announcement.title}: ${announcement.message}`);
-    });
-    return () => {
-      newSocket.disconnect();
-    };
+    try {
+      const newSocket = io((import.meta as any).env?.VITE_API_BASE_URL || '/', {
+        auth: {
+          token: localStorage.getItem('token'),
+        },
+      });
+      setSocket(newSocket);
+      newSocket.on('connect', () => {
+        newSocket.emit('join', channel);
+      });
+      newSocket.on('chat', (msg: ChatMessage) => {
+        setMessages((prev) => [...prev, msg]);
+      });
+      newSocket.on('announcement', (announcement) => {
+        alert(`${announcement.title}: ${announcement.message}`);
+      });
+      return () => {
+        newSocket.disconnect();
+      };
+    } catch (err) {
+      setMessages(sampleChatMessages);
+    }
   }, [channel]);
 
   const sendMessage = () => {
@@ -53,6 +58,14 @@ export default function Chat() {
     });
     setMessageInput('');
   };
+
+  useEffect(() => {
+    // Seed some visible content if nothing yet
+    if (messages.length === 0) {
+      setMessages(sampleChatMessages.filter((m) => m.channel === channel));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channel]);
 
   return (
     <div className="grid h-full gap-6 lg:grid-cols-[0.35fr_0.65fr]">

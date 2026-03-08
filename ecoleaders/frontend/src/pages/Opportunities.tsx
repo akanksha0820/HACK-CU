@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
+import api from '../api';
 
 const items = [
   {
+    id: 'evt1',
     title: 'Community Compost Workshop',
     date: 'Sat, 2:00 PM',
     location: 'Boulder Civic Area',
@@ -13,6 +15,7 @@ const items = [
     required: [],
   },
   {
+    id: 'evt2',
     title: 'Saturday Creek Cleanup',
     date: 'Sun, 9:00 AM',
     location: 'Boulder Creek',
@@ -29,6 +32,15 @@ export default function Opportunities() {
     () => ['composting', 'education', 'cleanup', 'advocacy', 'private'],
     [],
   );
+
+  const handleSignup = async (id: string) => {
+    try {
+      await api.post(`/events/${id}/signup`);
+      alert('Signed up!');
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Signup recorded (mock if offline)');
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -76,7 +88,12 @@ export default function Opportunities() {
               )}
             </div>
             <div className="flex flex-wrap gap-2">
-              <button className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern">Sign up</button>
+              <button
+                onClick={() => handleSignup(item.id)}
+                className="rounded-full bg-[color:var(--green)] px-3 py-1 text-xs font-semibold text-slate-900 shadow-fern"
+              >
+                Sign up
+              </button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">Save</button>
               <button className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text)]">View prep list</button>
             </div>

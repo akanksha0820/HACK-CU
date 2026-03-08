@@ -17,7 +17,8 @@ export const register = async (req: Request, res: Response) => {
       return res.status(409).json({ message: 'Email already registered' });
     }
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashed, role: role || 'volunteer' });
+    const safeRole = role && ['volunteer', 'coordinator', 'admin'].includes(role) ? role : 'volunteer';
+    const user = new User({ name, email, password: hashed, role: safeRole });
     await user.save();
     const token = jwt.sign({ id: user._id, role: user.role }, jwtSecret, { expiresIn: '7d' });
     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });

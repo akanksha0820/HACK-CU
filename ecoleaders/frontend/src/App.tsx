@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import About from './pages/About';
@@ -18,44 +18,157 @@ import VolunteerManager from './pages/VolunteerManager';
 import Reports from './pages/Reports';
 import AITools from './pages/AITools';
 import { AppShell } from './components/AppShell';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-function App() {
-  const [role] = useState<'volunteer' | 'coordinator' | 'admin'>('volunteer');
-  const shell = useMemo(
-    () => (page: React.ReactNode) => <AppShell role={role}>{page}</AppShell>,
-    [role],
-  );
+function Protected({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  const shell = useMemo(() => <AppShell role={user.role}>{children}</AppShell>, [children, user?.role]);
+  return <>{shell}</>;
+}
 
+function AppRoutes() {
   return (
     <Routes>
       {/* Public marketing */}
       <Route path="/" element={<Landing />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/home" element={shell(<Home />)} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/home" element={<Home />} />
 
       {/* Volunteer app */}
-      <Route path="/dashboard" element={shell(<Dashboard />)} />
-      <Route path="/opportunities" element={shell(<Opportunities />)} />
-      <Route path="/calendar" element={shell(<CalendarPage />)} />
-      <Route path="/announcements" element={shell(<Announcements />)} />
-      <Route path="/chat" element={shell(<Chat />)} />
-      <Route path="/carpools" element={shell(<Carpool />)} />
-      <Route path="/training" element={shell(<Training />)} />
-      <Route path="/profile" element={shell(<Profile />)} />
+      <Route
+        path="/dashboard"
+        element={
+          <Protected>
+            <Dashboard />
+          </Protected>
+        }
+      />
+      <Route
+        path="/opportunities"
+        element={
+          <Protected>
+            <Opportunities />
+          </Protected>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <Protected>
+            <CalendarPage />
+          </Protected>
+        }
+      />
+      <Route
+        path="/announcements"
+        element={
+          <Protected>
+            <Announcements />
+          </Protected>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <Protected>
+            <Chat />
+          </Protected>
+        }
+      />
+      <Route
+        path="/carpools"
+        element={
+          <Protected>
+            <Carpool />
+          </Protected>
+        }
+      />
+      <Route
+        path="/training"
+        element={
+          <Protected>
+            <Training />
+          </Protected>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <Protected>
+            <Profile />
+          </Protected>
+        }
+      />
 
       {/* Coordinator */}
-      <Route path="/coord/dashboard" element={shell(<CoordinatorDashboard />)} />
-      <Route path="/coord/events" element={shell(<EventManager />)} />
-      <Route path="/coord/volunteers" element={shell(<VolunteerManager />)} />
-      <Route path="/reports" element={shell(<Reports />)} />
+      <Route
+        path="/coord/dashboard"
+        element={
+          <Protected>
+            <CoordinatorDashboard />
+          </Protected>
+        }
+      />
+      <Route
+        path="/coord/events"
+        element={
+          <Protected>
+            <EventManager />
+          </Protected>
+        }
+      />
+      <Route
+        path="/coord/volunteers"
+        element={
+          <Protected>
+            <VolunteerManager />
+          </Protected>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <Protected>
+            <Reports />
+          </Protected>
+        }
+      />
 
       {/* Admin / AI */}
-      <Route path="/admin/ai" element={shell(<AITools />)} />
-      <Route path="/admin/settings" element={shell(<Reports />)} />
+      <Route
+        path="/admin/ai"
+        element={
+          <Protected>
+            <AITools />
+          </Protected>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <Protected>
+            <Reports />
+          </Protected>
+        }
+      />
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   );
 }
 

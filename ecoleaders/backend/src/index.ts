@@ -45,16 +45,13 @@ app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', creden
 app.use(express.json({ limit: '10mb' }));
 
 // Database connection
-const mongoUri = process.env.MONGODB_URI;
-if (!mongoUri) {
-  console.error('Missing MONGODB_URI in environment');
-  process.exit(1);
-}
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ecoleaders';
 mongoose
   .connect(mongoUri)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => console.log(`Connected to MongoDB at ${mongoUri}`))
   .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err.message);
+    console.error('Check MONGODB_URI in backend/.env or ensure local MongoDB is running on 27017.');
     process.exit(1);
   });
 
