@@ -61,8 +61,8 @@ export default function Announcements() {
                 onClick={async () => {
                   try {
                     await requestNotifyPermission();
-                    showLocalNotification('Eco-Leaders', `${a.title} — ${a.body}`);
-                    alert('Push notification sent (browser-local demo).');
+                    showLocalNotification(a.title, a.body);
+                    alert('Announcement sent as notification (browser-local demo).');
                   } catch (err: any) {
                     alert(err?.message || 'Notifications not available.');
                   }
